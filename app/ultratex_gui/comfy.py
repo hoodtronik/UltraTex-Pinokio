@@ -49,7 +49,8 @@ def run(prompt, on_progress=None):
     )
     try:
         r = httpx.post(f"{COMFY_URL}/prompt", json={"prompt": prompt, "client_id": client_id}, timeout=60)
-        if r.status_code != 200:
+        # ComfyUI answers 200 and silently skips outputs that fail validation, so node_errors must be checked too
+        if r.status_code != 200 or r.json().get("node_errors"):
             raise ComfyError(_format_validation_error(r))
         prompt_id = r.json()["prompt_id"]
         while True:

@@ -18,16 +18,41 @@ import httpx
 SKIP_TYPES = {"Note", "MarkdownNote", "PrimitiveNode", "Reroute"}
 
 
-def widget_inputs(info):
-    """(name, spec) for every input that is a widget, in widgets_values order."""
+WIDGET_TYPES = ("INT", "FLOAT", "STRING", "BOOLEAN", "COMBO", "LOAD_3D", "COLOR")
+DYNAMIC_COMBO = "COMFY_DYNAMICCOMBO_V3"
+
+
+def widget_inputs(inputs_spec):
+    """(name, type, opts) for every widget input, in widgets_values order."""
     out = []
     for section in ("required", "optional"):
-        for name, spec in info["input"].get(section, {}).items():
+        for name, spec in inputs_spec.get(section, {}).items():
             typ = spec[0]
             opts = spec[1] if len(spec) > 1 and isinstance(spec[1], dict) else {}
-            if isinstance(typ, list) or typ in ("INT", "FLOAT", "STRING", "BOOLEAN", "COMBO", "LOAD_3D"):
+            if isinstance(typ, list) or typ in WIDGET_TYPES or typ == DYNAMIC_COMBO:
                 out.append((name, typ, opts))
     return out
+
+
+def consume_widgets(inputs_spec, values, inputs, prefix=""):
+    for name, typ, opts in widget_inputs(inputs_spec):
+        if not values:
+            return
+        key = prefix + name
+        inputs[key] = values.pop(0)
+        # Frontend-only companion widgets that store an extra value
+        if opts.get("control_after_generate") or (typ == "INT" and name in ("seed", "noise_seed")):
+            if values and values[0] in ("fixed", "increment", "decrement", "randomize"):
+                values.pop(0)
+        if opts.get("image_upload") or opts.get("video_upload") or opts.get("audio_upload"):
+            if values and values[0] in ("image", "video", "audio", ""):
+                values.pop(0)
+        # CLAUDE-NOTE: a dynamic combo's chosen option adds its own sub-widgets right after it; the API
+        # names them "<combo>.<sub>" (comfy_api finalize_prefix).
+        if typ == DYNAMIC_COMBO:
+            option = next((o for o in opts.get("options", []) if o["key"] == inputs[key]), None)
+            if option:
+                consume_widgets(option["inputs"], values, inputs, key + ".")
 
 
 def convert(ui, object_info):
@@ -56,17 +81,7 @@ def convert(ui, object_info):
         if isinstance(n.get("widgets_values"), dict):
             values = []
             inputs.update(n["widgets_values"])
-        for name, typ, opts in widget_inputs(info):
-            if not values:
-                break
-            inputs[name] = values.pop(0)
-            # Frontend-only companion widgets that store an extra value
-            if opts.get("control_after_generate") or (typ == "INT" and name in ("seed", "noise_seed")):
-                if values and values[0] in ("fixed", "increment", "decrement", "randomize"):
-                    values.pop(0)
-            if opts.get("image_upload") or opts.get("video_upload") or opts.get("audio_upload"):
-                if values and values[0] in ("image", "video", "audio", ""):
-                    values.pop(0)
+        consume_widgets(info["input"], values, inputs)
         for inp in n.get("inputs", []):
             if inp.get("link") is None:
                 continue

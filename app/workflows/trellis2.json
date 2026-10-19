@@ -360,12 +360,16 @@
     "class_type": "RemeshMesh",
     "inputs": {
       "resolution": 768,
-      "band": "udf",
-      "project_back": false,
+      "sign_mode": "udf",
+      "sign_mode.qef": false,
+      "sign_mode.drop_inverted_components": false,
+      "sign_mode.drop_enclosed_components": false,
+      "band": 1,
+      "project_back": 0,
       "fix_poles": false,
-      "smooth_iters": false,
-      "drop_small_components": 1,
-      "precluster_max_verts": 0,
+      "smooth_iters": 20,
+      "drop_small_components": 0.01,
+      "precluster_max_verts": 20000000,
       "mesh": [
         "202",
         0
@@ -379,6 +383,7 @@
     "class_type": "DecimateMesh",
     "inputs": {
       "target_face_count": 700000,
+      "placement_mode": "midpoint",
       "mesh": [
         "241",
         0
@@ -523,6 +528,7 @@
       "height": 1024,
       "pad_factor": 1.1,
       "grow_mask": 0,
+      "background": "#000000",
       "images": [
         "122",
         0

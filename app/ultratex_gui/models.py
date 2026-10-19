@@ -80,4 +80,5 @@ def download(key, hf_token=None):
 
         got = model_file_download(model_id=repo, file_path=file, local_dir=tmp)
     shutil.move(got, dest)
+    shutil.rmtree(tmp, ignore_errors=True)  # repo subfolders + HF/ModelScope metadata left behind
     return dest
