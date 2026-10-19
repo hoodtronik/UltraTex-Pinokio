@@ -31,7 +31,10 @@ pterm stop  start.js   --ref pinokio://127.0.0.1:42000/api/UltraTex
 
 - start.js picks a free port for ComfyUI (`local.comfy_port`) and passes `COMFY_URL` to the GUI. ComfyUI is **not** on 8188.
 - Logs: `logs/api/<script>/` (newest numbered file). Check them before guessing.
-- Headless smoke test (ComfyUI already running): from `app/`, run `COMFY_URL=http://127.0.0.1:<port> env/Scripts/python.exe ../logs/test_run.py mesh_low` (see the script for other modes).
+- Keep `pterm start` attached (run it in the background). Killing the pterm client stalls the script mid-step.
+- Headless smoke test (ComfyUI already running): from `app/`, run `COMFY_URL=<comfy_url> env/Scripts/python.exe tools/smoke_test.py mesh_low_preview IMAGE`, then `... texture_low_standard MESH IMAGE`.
+- Full GUI-path test: use `gradio_client` against `/generate_mesh` and `/texture_mesh` (see README). `/generate_mesh` returns `(viewer_glb, mesh_glb, status)`.
+- Measured on an RTX 6000 Ada: Trellis low + preview ~110 s, Trellis high ~90 s, UltraTex low at 4 steps ~200 s.
 
 ## Pipelines and node IDs
 
@@ -81,6 +84,9 @@ Add it to `MODELS` and `REQUIRED` in `models.py`. The saved filename must match 
 
 ## Gotchas
 
+- Regex strings in `start.js` need doubled backslashes (`"/GUI go to:\\s+(http:\\/\\/[0-9.:]+)/"`). With single backslashes the pattern silently never matches and Start hangs at "starting".
+- ComfyUI's `/prompt` returns 200 even when some outputs fail validation; `comfy.run` raises on `node_errors`.
+- Newer ComfyUI templates use `COLOR` and `COMFY_DYNAMICCOMBO_V3` widgets. A dynamic combo's sub-inputs are named `<combo>.<sub>`; ui_to_api.py handles both.
 - Quote pip version specifiers in Pinokio `shell.run` (`"triton-windows<3.8"`). Unquoted `<` and `>` are redirects on Windows.
 - Torch is pinned to 2.13 cu130 with `triton-windows<3.8`, the newest pair in UltraTex's torch→triton table. torchaudio has no cu130 build past 2.11 and is not installed.
 - **Don't use `fs.link`.** On this machine Pinokio's shared drive is on C: (partly inside Pinokio's program folder); the user chose to keep models on F:. If the links ever reappear, remove the junctions with `cmd /c rmdir`. Never use `rm -rf`, which deletes the shared models.
