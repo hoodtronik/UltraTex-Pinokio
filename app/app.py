@@ -88,9 +88,9 @@ def build():
             vram = gr.Radio(VRAM_CHOICES, value=prefs["vram_mode"], label="VRAM mode", scale=3)
             stop_btn = gr.Button("Stop", variant="stop", scale=1)
             free_btn = gr.Button("Free VRAM", scale=1)
-        vram.change(lambda m: settings.save(vram_mode=m) and None, vram, None)
-        stop_btn.click(lambda: comfy.interrupt(), None, None)
-        free_btn.click(lambda: comfy.free_vram(), None, None)
+        vram.change(lambda m: settings.save(vram_mode=m) and None, vram, None, api_name=False)
+        stop_btn.click(lambda: comfy.interrupt(), None, None, api_name=False)
+        free_btn.click(lambda: comfy.free_vram(), None, None, api_name=False)
 
         with gr.Tabs() as tabs:
             with gr.Tab("1 · Generate Mesh", id="mesh"):
@@ -151,14 +151,14 @@ def build():
                                               ("texture", "low", "Texture · Low"), ("texture", "high", "Texture · High")]:
                         dl[(task, mode)] = gr.Button(f"Download {label}")
                 dl_msg = gr.Markdown()
-                token_btn.click(save_token, token, token_msg)
+                token_btn.click(save_token, token, token_msg, api_name=False)
                 for (task, mode), btn in dl.items():
-                    btn.click(lambda t=task, m=mode, progress=gr.Progress(): download_set(t, m, progress), None, [table, dl_msg])
+                    btn.click(lambda t=task, m=mode, progress=gr.Progress(): download_set(t, m, progress), None, [table, dl_msg], api_name=False)
 
-        m_btn.click(run_mesh, [m_image, vram, m_preview, m_faces, m_seed], [m_view, m_file, m_glb, m_status])
-        m_send.click(lambda g, img: (g, img, gr.Tabs(selected="texture")), [m_glb, m_image], [t_mesh, t_image, tabs])
+        m_btn.click(run_mesh, [m_image, vram, m_preview, m_faces, m_seed], [m_view, m_file, m_glb, m_status], api_name="generate_mesh")
+        m_send.click(lambda g, img: (g, img, gr.Tabs(selected="texture")), [m_glb, m_image], [t_mesh, t_image, tabs], api_name=False)
         t_btn.click(run_texture, [t_mesh, t_image, vram, t_quality, t_res, t_steps, t_seed, t_tex, t_uv],
-                    [t_view, t_maps, t_files, t_status])
+                    [t_view, t_maps, t_files, t_status], api_name="texture_mesh")
     return demo
 
 
