@@ -1,0 +1,10 @@
+# Installed at runtime by install.js
+app/comfyui/
+app/env/
+cache/
+logs/
+app/outputs/
+app/settings.json
+__pycache__/
+*.pyc
+.env
