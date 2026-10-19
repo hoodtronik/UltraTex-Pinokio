@@ -1,0 +1,6 @@
+gradio==5.49.1
+httpx
+websocket-client
+huggingface_hub
+modelscope
+trimesh
