@@ -1,0 +1,5 @@
+# Keep caches inside the app folder (on the app's drive) instead of the system temp / user profile.
+GRADIO_TEMP_DIR=./cache/GRADIO_TEMP_DIR
+HF_HOME=./cache/HF_HOME
+TORCH_HOME=./cache/TORCH_HOME
+PINOKIO_SCRIPT_DEFAULT=true

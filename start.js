@@ -18,7 +18,9 @@ module.exports = {
           "python comfyui/main.py --listen 127.0.0.1 --port {{local.comfy_port}} --max-upload-size 2048"
         ],
         on: [{
-          event: "/To see the GUI go to:\s+(http:\/\/\S+)/",
+          // CLAUDE-NOTE: backslashes must be doubled inside these JS strings. [0-9.:]+ (not \S+) keeps the
+          // trailing ANSI erase code (ESC[K) that ComfyUI prints under a pty out of the captured URL.
+          event: "/GUI go to:\\s+(http:\\/\\/[0-9.:]+)/",
           done: true
         }, {
           event: "/errno/i",
@@ -41,7 +43,7 @@ module.exports = {
         path: "app",
         message: ["python app.py"],
         on: [{
-          event: "/Running on local URL:\s+(http:\/\/[0-9.:]+)/",
+          event: "/Running on local URL:\\s+(http:\\/\\/[0-9.:]+)/",
           done: true
         }]
       }
