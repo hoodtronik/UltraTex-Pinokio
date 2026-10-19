@@ -1,0 +1,565 @@
+{
+  "91": {
+    "class_type": "Trellis2ShapeStage",
+    "inputs": {
+      "positive": [
+        "299",
+        0
+      ],
+      "negative": [
+        "299",
+        1
+      ],
+      "voxel": [
+        "119",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Trellis2ShapeStage"
+    }
+  },
+  "118": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "trellis_2_texture_vae_bf16.safetensors"
+    },
+    "_meta": {
+      "title": "VAELoader"
+    }
+  },
+  "93": {
+    "class_type": "VaeDecodeTextureTrellis",
+    "inputs": {
+      "samples": [
+        "12",
+        0
+      ],
+      "vae": [
+        "118",
+        0
+      ],
+      "shape_subdivides": [
+        "92",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "VaeDecodeTextureTrellis"
+    }
+  },
+  "15": {
+    "class_type": "CLIPVisionLoader",
+    "inputs": {
+      "clip_name": "dino_v3_L_naf_fp32.safetensors"
+    },
+    "_meta": {
+      "title": "CLIPVisionLoader"
+    }
+  },
+  "202": {
+    "class_type": "GetMeshInfo",
+    "inputs": {
+      "mesh": [
+        "92",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "GetMeshInfo"
+    }
+  },
+  "12": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 43,
+      "steps": 12,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "40",
+        0
+      ],
+      "positive": [
+        "98",
+        0
+      ],
+      "negative": [
+        "98",
+        1
+      ],
+      "latent_image": [
+        "98",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "238": {
+    "class_type": "MeshSmoothNormals",
+    "inputs": {
+      "crease_angle": 180,
+      "mesh": [
+        "186",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "MeshSmoothNormals"
+    }
+  },
+  "18": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 42,
+      "steps": 20,
+      "cfg": 7.5,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "126",
+        0
+      ],
+      "positive": [
+        "91",
+        0
+      ],
+      "negative": [
+        "91",
+        1
+      ],
+      "latent_image": [
+        "91",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "252": {
+    "class_type": "PaintMesh",
+    "inputs": {
+      "mesh": [
+        "238",
+        0
+      ],
+      "voxel_colors": [
+        "93",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "PaintMesh"
+    }
+  },
+  "279": {
+    "class_type": "CFGOverride",
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0.769,
+      "end_percent": 1,
+      "model": [
+        "40",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "CFGOverride"
+    }
+  },
+  "126": {
+    "class_type": "RescaleCFG",
+    "inputs": {
+      "multiplier": 0.5,
+      "model": [
+        "279",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "RescaleCFG"
+    }
+  },
+  "192": {
+    "class_type": "RemoveBackground",
+    "inputs": {
+      "bg_removal_model": [
+        "193",
+        0
+      ],
+      "image": [
+        "122",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "RemoveBackground"
+    }
+  },
+  "248": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "switch": true,
+      "on_false": [
+        "122",
+        1
+      ],
+      "on_true": [
+        "192",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Switch: Remove background"
+    }
+  },
+  "303": {
+    "class_type": "MaskPreview",
+    "inputs": {
+      "mask": [
+        "248",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "MaskPreview"
+    }
+  },
+  "302": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "312",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "PreviewImage"
+    }
+  },
+  "119": {
+    "class_type": "VaeDecodeStructureTrellis2",
+    "inputs": {
+      "resolution": "32",
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "117",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VaeDecodeStructureTrellis2"
+    }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 56,
+      "steps": 12,
+      "cfg": 7.5,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "108",
+        0
+      ],
+      "positive": [
+        "299",
+        0
+      ],
+      "negative": [
+        "299",
+        1
+      ],
+      "latent_image": [
+        "87",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "125": {
+    "class_type": "RescaleCFG",
+    "inputs": {
+      "multiplier": 0.7,
+      "model": [
+        "199",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "RescaleCFG"
+    }
+  },
+  "199": {
+    "class_type": "CFGOverride",
+    "inputs": {
+      "cfg": 1,
+      "start_percent": 0.667,
+      "end_percent": 1,
+      "model": [
+        "40",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "CFGOverride"
+    }
+  },
+  "108": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "shift": 5,
+      "model": [
+        "125",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "ModelSamplingSD3"
+    }
+  },
+  "94": {
+    "class_type": "Trellis2UpsampleStage",
+    "inputs": {
+      "target_resolution": "1536",
+      "positive": [
+        "91",
+        0
+      ],
+      "negative": [
+        "91",
+        1
+      ],
+      "shape_latent": [
+        "18",
+        0
+      ],
+      "vae": [
+        "117",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Trellis2UpsampleStage"
+    }
+  },
+  "241": {
+    "class_type": "RemeshMesh",
+    "inputs": {
+      "resolution": 768,
+      "band": "udf",
+      "project_back": false,
+      "fix_poles": false,
+      "smooth_iters": false,
+      "drop_small_components": 1,
+      "precluster_max_verts": 0,
+      "mesh": [
+        "202",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "RemeshMesh"
+    }
+  },
+  "186": {
+    "class_type": "DecimateMesh",
+    "inputs": {
+      "target_face_count": 700000,
+      "mesh": [
+        "241",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "DecimateMesh"
+    }
+  },
+  "117": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "trellis_2_shape_vae_bf16.safetensors"
+    },
+    "_meta": {
+      "title": "VAELoader"
+    }
+  },
+  "193": {
+    "class_type": "LoadBackgroundRemovalModel",
+    "inputs": {
+      "bg_removal_name": "birefnet.safetensors"
+    },
+    "_meta": {
+      "title": "LoadBackgroundRemovalModel"
+    }
+  },
+  "299": {
+    "class_type": "Trellis2Conditioning",
+    "inputs": {
+      "clip_vision_model": [
+        "15",
+        0
+      ],
+      "image": [
+        "302",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Trellis2Conditioning"
+    }
+  },
+  "92": {
+    "class_type": "VaeDecodeShapeTrellis",
+    "inputs": {
+      "samples": [
+        "23",
+        0
+      ],
+      "vae": [
+        "117",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VaeDecodeShapeTrellis"
+    }
+  },
+  "40": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "trellis_2_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "UNETLoader"
+    }
+  },
+  "98": {
+    "class_type": "Trellis2TextureStage",
+    "inputs": {
+      "positive": [
+        "94",
+        0
+      ],
+      "negative": [
+        "94",
+        1
+      ],
+      "shape_latent": [
+        "23",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Trellis2TextureStage"
+    }
+  },
+  "87": {
+    "class_type": "EmptyTrellis2LatentStructure",
+    "inputs": {
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "EmptyTrellis2LatentStructure"
+    }
+  },
+  "23": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 42,
+      "steps": 12,
+      "cfg": 7.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "126",
+        0
+      ],
+      "positive": [
+        "94",
+        0
+      ],
+      "negative": [
+        "94",
+        1
+      ],
+      "latent_image": [
+        "94",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "122": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "viking_wolf_rune_axe.png"
+    },
+    "_meta": {
+      "title": "LoadImage"
+    }
+  },
+  "312": {
+    "class_type": "ImageCropToMask",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "pad_factor": 1.1,
+      "grow_mask": 0,
+      "images": [
+        "122",
+        0
+      ],
+      "masks": [
+        "303",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "ImageCropToMask"
+    }
+  },
+  "900": {
+    "class_type": "SaveGLB",
+    "inputs": {
+      "mesh": [
+        "238",
+        0
+      ],
+      "filename_prefix": "trellis/mesh"
+    },
+    "_meta": {
+      "title": "Save mesh"
+    }
+  },
+  "901": {
+    "class_type": "SaveGLB",
+    "inputs": {
+      "mesh": [
+        "252",
+        0
+      ],
+      "filename_prefix": "trellis/preview"
+    },
+    "_meta": {
+      "title": "Save texture preview"
+    }
+  }
+}

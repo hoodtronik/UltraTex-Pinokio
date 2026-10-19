@@ -1,0 +1,323 @@
+{
+  "1": {
+    "class_type": "Load3DAdvanced",
+    "inputs": {
+      "model_file": "3d/p13.glb",
+      "viewport_state": "",
+      "width": 512,
+      "height": 512
+    },
+    "_meta": {
+      "title": "Your mesh (GLB)"
+    }
+  },
+  "2": {
+    "class_type": "UTXFileToMesh",
+    "inputs": {
+      "file": [
+        "1",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "UTXFileToMesh"
+    }
+  },
+  "3": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "your_reference.png"
+    },
+    "_meta": {
+      "title": "Reference image"
+    }
+  },
+  "5": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "flux-2-klein-base-9b-Q4_0.gguf"
+    },
+    "_meta": {
+      "title": "UnetLoaderGGUF"
+    }
+  },
+  "6": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "_meta": {
+      "title": "VAELoader"
+    }
+  },
+  "7": {
+    "class_type": "CLIPLoaderGGUF",
+    "inputs": {
+      "clip_name": "Qwen3-8B-Q4_K_M.gguf",
+      "type": "flux2"
+    },
+    "_meta": {
+      "title": "CLIPLoaderGGUF"
+    }
+  },
+  "8": {
+    "class_type": "UTXTextEncode",
+    "inputs": {
+      "text": "",
+      "clip": [
+        "7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Empty prompt (albedo)"
+    }
+  },
+  "9": {
+    "class_type": "UTXGenerateTextureViewsV23",
+    "inputs": {
+      "lora_name": "ultratex_flux2.safetensors",
+      "lora_strength": 1,
+      "decoder_name": "ultratex_flux2_decoder.pt",
+      "task": "albedo",
+      "view_resolution": 1024,
+      "view_count": 12,
+      "seed": 0,
+      "steps": 4,
+      "guidance": 4,
+      "denoise": 1,
+      "sparse_retention": 0.2,
+      "extra_angle_mode": "guided",
+      "extra_denoise": 0.55,
+      "extra_steps": 4,
+      "tiled_decode": true,
+      "source": [
+        "45",
+        0
+      ],
+      "model": [
+        "5",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "47",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Generate \u00b7 Albedo (resolution + views HERE)"
+    }
+  },
+  "13": {
+    "class_type": "SaveGLB",
+    "inputs": {
+      "filename_prefix": "ultratex/textured",
+      "mesh": [
+        "48",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "SaveGLB"
+    }
+  },
+  "14": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "ultratex/base_color",
+      "images": [
+        "48",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "SaveImage"
+    }
+  },
+  "20": {
+    "class_type": "UTXGenerateTextureViewsV23",
+    "inputs": {
+      "lora_name": "ultratex_flux2_mr.safetensors",
+      "lora_strength": 1,
+      "decoder_name": "ultratex_flux2_decoder.pt",
+      "task": "mr",
+      "view_resolution": 1024,
+      "view_count": 6,
+      "seed": 0,
+      "steps": 4,
+      "guidance": 4,
+      "denoise": 1,
+      "sparse_retention": 0.2,
+      "extra_angle_mode": "independent",
+      "extra_denoise": 0.55,
+      "extra_steps": 4,
+      "tiled_decode": true,
+      "source": [
+        "45",
+        0
+      ],
+      "model": [
+        "5",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "47",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Generate \u00b7 Metallic-Roughness (6 views)"
+    }
+  },
+  "22": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "ultratex/roughness",
+      "images": [
+        "48",
+        3
+      ]
+    },
+    "_meta": {
+      "title": "Save roughness map"
+    }
+  },
+  "23": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "ultratex/metallic",
+      "images": [
+        "48",
+        4
+      ]
+    },
+    "_meta": {
+      "title": "Save metallic map"
+    }
+  },
+  "30": {
+    "class_type": "LoadBackgroundRemovalModel",
+    "inputs": {
+      "bg_removal_name": "birefnet.safetensors"
+    },
+    "_meta": {
+      "title": "LoadBackgroundRemovalModel"
+    }
+  },
+  "31": {
+    "class_type": "RemoveBackground",
+    "inputs": {
+      "bg_removal_model": [
+        "30",
+        0
+      ],
+      "image": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "RemoveBackground"
+    }
+  },
+  "44": {
+    "class_type": "UTXUnwrapMeshUVV25",
+    "inputs": {
+      "atlas_size": 4096,
+      "uv_mode": "comfy_gpu",
+      "padding": 16,
+      "mesh": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "UV unwrap"
+    }
+  },
+  "45": {
+    "class_type": "UTXPrepareTextureV25",
+    "inputs": {
+      "alignment": "front",
+      "mask_polarity": "foreground",
+      "normal_mode": "auto_smooth",
+      "normal_view_resolution": 1024,
+      "camera_fit": "custom",
+      "image_margin_percent": 0,
+      "image_padding_pixels": 0,
+      "reference_zoom": 1,
+      "mesh": [
+        "44",
+        0
+      ],
+      "reference": [
+        "3",
+        0
+      ],
+      "mask": [
+        "31",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Prepare mesh + reference"
+    }
+  },
+  "47": {
+    "class_type": "UTXTextEncode",
+    "inputs": {
+      "text": "",
+      "clip": [
+        "7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Empty prompt (MR)"
+    }
+  },
+  "48": {
+    "class_type": "UTXFastSurfaceTextureBaker",
+    "inputs": {
+      "texture_size": 2048,
+      "completion": "surface_fill",
+      "upscale_mode": "fast_detail",
+      "device": "auto",
+      "albedo_setup": [
+        "9",
+        3
+      ],
+      "albedo_views": [
+        "9",
+        0
+      ],
+      "mr_setup": [
+        "20",
+        3
+      ],
+      "mr_views": [
+        "20",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "UTXFastSurfaceTextureBaker"
+    }
+  }
+}

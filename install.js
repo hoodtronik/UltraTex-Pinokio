@@ -3,6 +3,8 @@
 const ULTRATEX_VB = "8137da52ed8352305cb7825b39c36a250bf2507a"
 const ULTRATEX_MAD = "8d434a2104be520ea699a9baac2327d124387111"
 
+// CLAUDE-NOTE: no fs.link to Pinokio's shared drive on purpose. On this machine the shared drive lives on C:
+// (partly inside Pinokio's program folder), and the user chose to keep the ~40 GB of models on the app's drive.
 module.exports = {
   requires: { bundle: "ai" },
   run: [
@@ -48,27 +50,6 @@ module.exports = {
         venv: "env",
         path: "app",
         message: "python tools/triton_check.py comfyui/custom_nodes/ComfyUI-UltraTex"
-      }
-    },
-    {
-      method: "fs.link",
-      params: {
-        drive: {
-          "checkpoints": "app/comfyui/models/checkpoints",
-          "clip": "app/comfyui/models/clip",
-          "clip_vision": "app/comfyui/models/clip_vision",
-          "diffusion_models": "app/comfyui/models/diffusion_models",
-          "loras": "app/comfyui/models/loras",
-          "text_encoders": "app/comfyui/models/text_encoders",
-          "unet": "app/comfyui/models/unet",
-          "vae": "app/comfyui/models/vae",
-          "background_removal": "app/comfyui/models/background_removal",
-          "ultratex": "app/comfyui/models/ultratex"
-        },
-        peers: [
-          "https://github.com/cocktailpeanutlabs/comfyui.git",
-          "https://github.com/pinokiofactory/comfy.git"
-        ]
       }
     }
   ]
