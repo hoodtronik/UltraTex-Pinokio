@@ -74,10 +74,12 @@ def save_token(token):
 
 def download_set(task, mode, progress=gr.Progress()):
     try:
-        ensure_models(task, mode, progress)
+        for t in (("mesh", "texture") if task == "all" else (task,)):
+            ensure_models(t, mode, progress)
     except RuntimeError as e:
         raise gr.Error(str(e))
-    return models.status_rows(), f"All models for {task} ({mode} VRAM) are installed."
+    what = "the full pipeline (mesh + texture)" if task == "all" else task
+    return models.status_rows(), f"All models for {what} ({mode} VRAM) are installed."
 
 
 def build():
@@ -148,7 +150,8 @@ def build():
                 with gr.Row():
                     dl = {}
                     for task, mode, label in [("mesh", "low", "Mesh · Low"), ("mesh", "high", "Mesh · High"),
-                                              ("texture", "low", "Texture · Low"), ("texture", "high", "Texture · High")]:
+                                              ("texture", "low", "Texture · Low"), ("texture", "high", "Texture · High"),
+                                              ("all", "low", "Textured mesh · Low"), ("all", "high", "Textured mesh · High")]:
                         dl[(task, mode)] = gr.Button(f"Download {label}")
                 dl_msg = gr.Markdown()
                 token_btn.click(save_token, token, token_msg, api_name=False)

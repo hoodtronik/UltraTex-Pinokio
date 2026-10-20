@@ -26,6 +26,8 @@ Models download automatically the first time a pipeline needs them. The **Models
 | Mesh · High | ~14 GB |
 | Texture · Low | ~12 GB |
 | Texture · High | ~19 GB |
+| Textured mesh · Low (mesh + texture) | ~20 GB |
+| Textured mesh · High (mesh + texture) | ~33 GB |
 
 High VRAM texturing uses the **gated** `black-forest-labs/FLUX.2-klein-base-9b-fp8`. To get it:
 1. Accept its license on Hugging Face.
