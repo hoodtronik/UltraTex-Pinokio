@@ -1,4 +1,4 @@
-# UltraTex for Pinokio
+# Trellis2 + UltraTex for Pinokio
 
 A one-click Pinokio app that turns **an image into a textured 3D asset**:
 

@@ -1,5 +1,5 @@
 {
-  "title": "UltraTex",
+  "title": "Trellis2 + UltraTex",
   "description": "Trellis 2 image-to-mesh + UltraTex PBR texturing (FLUX.2 Klein) in a simple GUI, running on a private ComfyUI backend. Windows + NVIDIA. Low VRAM (8GB) default, High VRAM mode for 16GB+.",
   "icon": "icon.png"
 }

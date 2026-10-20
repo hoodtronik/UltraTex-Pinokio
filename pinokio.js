@@ -21,7 +21,7 @@ module.exports = {
       let local = info.local("start.js")
       let items = []
       if (local && local.url) {
-        items.push({ default: true, icon: "fa-solid fa-rocket", text: "Open UltraTex", href: local.url + "?ts=" + Date.now() })
+        items.push({ default: true, icon: "fa-solid fa-rocket", text: "Open Trellis2 + UltraTex", href: local.url + "?ts=" + Date.now() })
       }
       if (local && local.comfy_url) {
         items.push({ icon: "fa-solid fa-diagram-project", text: "Open ComfyUI", href: local.comfy_url })
