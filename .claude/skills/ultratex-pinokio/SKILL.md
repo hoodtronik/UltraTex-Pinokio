@@ -34,7 +34,7 @@ pterm stop  start.js   --ref pinokio://127.0.0.1:42000/api/UltraTex
 - Keep `pterm start` attached (run it in the background). Killing the pterm client stalls the script mid-step.
 - Headless smoke test (ComfyUI already running): from `app/`, run `COMFY_URL=<comfy_url> env/Scripts/python.exe tools/smoke_test.py mesh_low_preview IMAGE`, then `... texture_low_standard MESH IMAGE`.
 - Full GUI-path test: use `gradio_client` against `/generate_mesh` and `/texture_mesh` (see README). `/generate_mesh` returns `(viewer_glb, mesh_glb, status)`.
-- Measured on an RTX 6000 Ada: Trellis low + preview ~110 s, Trellis high ~90 s, UltraTex low at 4 steps ~200 s.
+- Measured on an RTX 6000 Ada: Trellis low + preview ~110 s, Trellis high ~90 s, UltraTex low at 4 steps ~200 s, high Standard at 25 steps ~160 s, high Advanced ~190 s.
 
 ## Pipelines and node IDs
 
@@ -90,7 +90,7 @@ Add it to `MODELS` and `REQUIRED` in `models.py`. The saved filename must match 
 - Quote pip version specifiers in Pinokio `shell.run` (`"triton-windows<3.8"`). Unquoted `<` and `>` are redirects on Windows.
 - Torch is pinned to 2.13 cu130 with `triton-windows<3.8`, the newest pair in UltraTex's torch→triton table. torchaudio has no cu130 build past 2.11 and is not installed.
 - **Don't use `fs.link`.** On this machine Pinokio's shared drive is on C: (partly inside Pinokio's program folder); the user chose to keep models on F:. If the links ever reappear, remove the junctions with `cmd /c rmdir`. Never use `rm -rf`, which deletes the shared models.
-- `FLUX.2-klein-base-9b-fp8` (High VRAM texture) is gated and needs an HF token (Models tab → `app/settings.json`, or the `HF_TOKEN` env var). Only the **base** Klein works, not the distilled one.
+- `FLUX.2-klein-base-9b-fp8` (High VRAM texture) is gated and needs an HF token (lookup order: `HF_TOKEN` env var, Models tab → `app/settings.json`, then the machine's `hf auth login`; that's why ENVIRONMENT must not set HF_HOME). Only the **base** Klein works, not the distilled one.
 - The Trellis template's CLIP vision model is `dino_v3_L_naf_fp32.safetensors` from **Comfy-Org/Pixal3D**, not `dino_v3_vit_l` from Comfy-Org/TRELLIS.2.
 - Low VRAM UltraTex has no fallback without Triton. install.js runs `tools/triton_check.py`; look for `Triton sparse attention: OK` in the install log.
 - Gradio serves files only from `allowed_paths` (ComfyUI `output/`).

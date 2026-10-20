@@ -29,7 +29,7 @@ Models download automatically the first time a pipeline needs them. The **Models
 
 High VRAM texturing uses the **gated** `black-forest-labs/FLUX.2-klein-base-9b-fp8`. To get it:
 1. Accept its license on Hugging Face.
-2. Paste a free *Read* token in **Models → Hugging Face token**. It is stored only in `app/settings.json`, which is gitignored.
+2. Paste a free *Read* token in **Models → Hugging Face token**. It is stored only in `app/settings.json`, which is gitignored. If you already logged in with the Hugging Face CLI (`hf auth login`), you can skip this step: the app uses that login.
 
 Models stay inside this app (`app/comfyui/models`), not Pinokio's shared drive.
 
