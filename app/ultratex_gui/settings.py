@@ -24,4 +24,8 @@ def save(**changes):
 
 
 def hf_token():
-    return os.environ.get("HF_TOKEN") or load()["hf_token"]
+    # CLAUDE-NOTE: fall back to the machine's `hf auth login` token, so users who already logged in with
+    # the HF CLI don't have to paste a token. This is why ENVIRONMENT must not override HF_HOME.
+    from huggingface_hub import get_token
+
+    return os.environ.get("HF_TOKEN") or load()["hf_token"] or get_token() or ""
