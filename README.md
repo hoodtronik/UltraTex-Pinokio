@@ -7,14 +7,68 @@ A one-click Pinokio app that turns **an image into a textured 3D asset**:
 
 Everything runs on a private ComfyUI inside this app, behind a simple Gradio GUI. **Windows + NVIDIA.**
 
-## Use
+## Requirements
 
-1. **Install**, then **Start**, then **Open UltraTex**.
-2. Pick a **VRAM mode** at the top:
-   - **Low VRAM (default, 6–8 GB):** UltraTex runs on GGUF Q4 models; Trellis 2 runs int8.
-   - **High VRAM (16 GB+):** UltraTex runs on FLUX.2 Klein fp8 with the **Standard (6 views)** or **Advanced (10 views)** workflow; Trellis 2 runs bf16.
-3. **1 · Generate Mesh**: drop in an image, then click **Generate mesh**. Click **Send to Texture ▶** to hand the untextured mesh and the same image to tab 2.
-4. **2 · Texture**: add a mesh (GLB/OBJ/PLY) and a sharp front reference image, then click **Texture mesh**. Outputs are a textured GLB plus the texture maps.
+- **Windows 10/11** with an **NVIDIA GPU**: 8 GB VRAM for Low VRAM mode, 16 GB+ for High VRAM mode. A recent NVIDIA driver is recommended (driver 580+ gets the CUDA 13 build of PyTorch, older drivers get CUDA 12.8).
+- **[Pinokio](https://pinokio.co)** (it provides Python, Git, conda and uv; nothing else needs to be installed by hand).
+- **Disk space:** about 15 GB for the app itself plus 20 GB (Low) to 33 GB (High) of models. Install Pinokio on a drive with room to spare.
+
+## Install
+
+1. Open Pinokio and click **Discover** → **Download from URL** (or the **+** button).
+2. Paste this repo's URL, `https://github.com/hoodtronik/UltraTex-Pinokio`, and click **Download**.
+3. Open the app and click **Install**. This clones ComfyUI and the UltraTex/GGUF node packs at pinned versions and installs PyTorch. It takes about 10–20 minutes; the log ends with `Triton sparse attention: OK`.
+4. Click **Start**. When the button **Open Trellis2 + UltraTex** appears, click it to open the GUI.
+
+Models are **not** downloaded during install. They download the first time you run a step (or from the **Models** tab), so the first run of each mode takes longer.
+
+## Directions
+
+### Pick a VRAM mode
+
+At the top of the GUI:
+- **Low VRAM (default, 8 GB):** UltraTex runs on GGUF Q4 models; Trellis 2 runs int8.
+- **High VRAM (16 GB+):** UltraTex runs on FLUX.2 Klein fp8 with the **Standard (6 views)** or **Advanced (10 views)** workflow; Trellis 2 runs bf16. Needs a free Hugging Face login (see [Models](#models)).
+
+### Image → textured 3D model
+
+1. Open **1 · Generate Mesh** and drop in an image of a single object (a front view on a plain background works best).
+2. Leave **Target faces** at 700k, optionally tick **Quick Trellis texture preview**, and click **Generate mesh**. The mesh appears in the viewer; **Download GLB** below it saves the untextured mesh.
+3. Click **Send to Texture ▶**. This moves the untextured mesh and the same image to tab 2.
+4. In **2 · Texture**, choose the settings (see below) and click **Texture mesh**.
+5. Get the results from **Downloads**: the **textured GLB** plus the **albedo** and **ORM** maps (G = roughness, B = metallic).
+
+### Texture a mesh you already have
+
+Open **2 · Texture** directly, add your mesh (GLB/OBJ/PLY) and a sharp front reference image, then click **Texture mesh**.
+
+### Texture settings
+
+| Setting | What it does |
+|---|---|
+| **Quality** (High VRAM only) | **Standard** paints 6 views (front, back, sides, top, bottom). **Advanced** adds a second pass at 45° angles (10 views) for better coverage on rounded shapes like characters. |
+| **View resolution** | Size of each generated view. 1024 for tests, 2048 for finals (slower). |
+| **Steps** | 25 for a final; 4 is a quick preview in Low VRAM mode. |
+| **Seed** | -1 = random. The seed used is shown in the status line, so you can repeat a result. |
+| **Texture size** | Size of the baked texture maps: 1024, 2048 or 4096. |
+| **UVs** | **comfy_gpu** (fast, default) or **xatlas** (CPU, slower) make new UVs; **keep_existing** keeps your mesh's UVs. |
+
+How long it takes, measured on an RTX 6000 Ada (48 GB): a mesh takes about 90–110 s, and texturing takes about 160 s (High · Standard), 190 s (High · Advanced) or 200 s (Low, 4 steps). Smaller GPUs are slower.
+
+### Buttons at the top
+
+- **Stop** cancels the running job.
+- **Free VRAM** unloads models from the GPU, which is useful before switching modes or running other GPU apps.
+
+### Where files go
+
+Results are saved in `app/comfyui/output` (meshes in `trellis/`, textures in `UltraTex/`) inside the app folder. In Pinokio, use the app's folder icon to open it.
+
+### Update, reset and ComfyUI
+
+- **Update** pulls the latest launcher and reinstalls the pinned dependencies. Downloaded models are kept.
+- **Reset** deletes ComfyUI and the Python environment (`app/comfyui` and `app/env`), **including downloaded models**. Run **Install** again afterwards.
+- While the app is running, **Open ComfyUI** opens the private ComfyUI backend, which is handy for debugging the workflows.
 
 ### Models
 
@@ -35,15 +89,18 @@ High VRAM texturing uses the **gated** `black-forest-labs/FLUX.2-klein-base-9b-f
 
 Models stay inside this app (`app/comfyui/models`), not Pinokio's shared drive.
 
-### Tips
+## Troubleshooting
 
-- UltraTex wants an untextured mesh with about 0.5–1M faces. Use a sharp, front-on reference image; any background is fine because it is removed automatically.
-- **Keep my UVs** needs one material, UVs inside 0–1, and no overlapping or mirrored islands.
-- In Low VRAM mode, use 4 steps for a preview and 25 for a final.
+- **"... is gated" error in High VRAM mode:** accept the FLUX license and add a Hugging Face token (see [Models](#models)).
+- **Out of memory:** switch to Low VRAM mode, click **Free VRAM**, or close other GPU apps.
+- **Bad texture on the back or sides:** use a sharper, front-on reference image, or try **Advanced** quality.
+- **Mesh too dense or slow to texture:** lower **Target faces** in tab 1. UltraTex works best with about 0.5–1M faces.
+- **Keep existing UVs fails or looks wrong:** it needs one material, UVs inside 0–1, and no overlapping or mirrored islands.
+- **Something else:** check the logs in the app folder under `logs/api/`. Click **Stop**, then **Start** again; if it still fails, run **Update**.
 
 ## API
 
-The GUI is a Gradio app, so every run can also be scripted. Use the URL Pinokio shows for **Open UltraTex**.
+The GUI is a Gradio app, so every run can also be scripted. Use the URL Pinokio shows for **Open Trellis2 + UltraTex**.
 
 ### Python (`pip install gradio_client`)
 
