@@ -51,7 +51,7 @@ Open **2 · Texture** directly, add your mesh (GLB/OBJ/PLY) and a sharp front re
 | **Steps** | 25 for a final; 4 is a quick preview in Low VRAM mode. |
 | **Seed** | -1 = random. The seed used is shown in the status line, so you can repeat a result. |
 | **Texture size** | Size of the baked texture maps: 1024, 2048 or 4096. |
-| **UVs** | **comfy_gpu** (fast, default) or **xatlas** (CPU, slower) make new UVs; **keep_existing** keeps your mesh's UVs. |
+| **UVs** | **Auto unwrap (GPU)** (fast, default) or **Auto unwrap (xatlas)** (CPU, much slower) make new UVs; **Keep my UVs** keeps your mesh's UVs. |
 
 How long it takes, measured on an RTX 6000 Ada (48 GB): a mesh takes about 90–110 s, and texturing takes about 160 s (High · Standard), 190 s (High · Advanced) or 200 s (Low, 4 steps). Smaller GPUs are slower.
 
@@ -95,7 +95,7 @@ Models stay inside this app (`app/comfyui/models`), not Pinokio's shared drive.
 - **Out of memory:** switch to Low VRAM mode, click **Free VRAM**, or close other GPU apps.
 - **Bad texture on the back or sides:** use a sharper, front-on reference image, or try **Advanced** quality.
 - **Mesh too dense or slow to texture:** lower **Target faces** in tab 1. UltraTex works best with about 0.5–1M faces.
-- **Keep existing UVs fails or looks wrong:** it needs one material, UVs inside 0–1, and no overlapping or mirrored islands.
+- **Keep my UVs fails or looks wrong:** it needs one material, UVs inside 0–1, and no overlapping or mirrored islands.
 - **Something else:** check the logs in the app folder under `logs/api/`. Click **Stop**, then **Start** again; if it still fails, run **Update**.
 
 ## API
