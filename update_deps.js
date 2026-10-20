@@ -3,19 +3,25 @@
 const ULTRATEX_VB = "8137da52ed8352305cb7825b39c36a250bf2507a"
 const ULTRATEX_MAD = "8d434a2104be520ea699a9baac2327d124387111"
 
+// CLAUDE-NOTE: git must never pop up a login window (credential helper picker / GitHub sign-in). Public repos
+// need no login; an empty credential.helper + these env vars make a bad URL or private repo fail fast instead.
+// Keep the same lines in install.js, update.js and update_deps.js.
+const NO_GIT_LOGIN = { GIT_TERMINAL_PROMPT: "0", GCM_INTERACTIVE: "never" }
+
 module.exports = {
   run: [
     {
       method: "shell.run",
       params: {
         path: "app",
+        env: NO_GIT_LOGIN,
         message: [
-          "git -C comfyui pull || git clone https://github.com/comfyanonymous/ComfyUI comfyui",
-          "git -C comfyui/custom_nodes/ComfyUI-UltraTex fetch || git clone https://github.com/visualbruno/ComfyUI-UltraTex comfyui/custom_nodes/ComfyUI-UltraTex",
-          `git -C comfyui/custom_nodes/ComfyUI-UltraTex checkout ${ULTRATEX_VB}`,
-          "git -C comfyui/custom_nodes/comfyui_ultratex_modular fetch || git clone https://github.com/Mstafa-awad/UltraTex-ComfyUI-nodes comfyui/custom_nodes/comfyui_ultratex_modular",
-          `git -C comfyui/custom_nodes/comfyui_ultratex_modular checkout --force ${ULTRATEX_MAD}`,
-          "git -C comfyui/custom_nodes/ComfyUI-GGUF pull || git clone https://github.com/city96/ComfyUI-GGUF comfyui/custom_nodes/ComfyUI-GGUF"
+          "git -c credential.helper= -C comfyui pull || git -c credential.helper= clone https://github.com/comfyanonymous/ComfyUI comfyui",
+          "git -c credential.helper= -C comfyui/custom_nodes/ComfyUI-UltraTex fetch || git -c credential.helper= clone https://github.com/visualbruno/ComfyUI-UltraTex comfyui/custom_nodes/ComfyUI-UltraTex",
+          `git -c credential.helper= -C comfyui/custom_nodes/ComfyUI-UltraTex checkout ${ULTRATEX_VB}`,
+          "git -c credential.helper= -C comfyui/custom_nodes/comfyui_ultratex_modular fetch || git -c credential.helper= clone https://github.com/Mstafa-awad/UltraTex-ComfyUI-nodes comfyui/custom_nodes/comfyui_ultratex_modular",
+          `git -c credential.helper= -C comfyui/custom_nodes/comfyui_ultratex_modular checkout --force ${ULTRATEX_MAD}`,
+          "git -c credential.helper= -C comfyui/custom_nodes/ComfyUI-GGUF pull || git -c credential.helper= clone https://github.com/city96/ComfyUI-GGUF comfyui/custom_nodes/ComfyUI-GGUF"
         ]
       }
     },

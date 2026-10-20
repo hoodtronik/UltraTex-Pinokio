@@ -9,3 +9,4 @@
 - Template widgets: COLOR and COMFY_DYNAMICCOMBO_V3 (sub-inputs named combo.sub).
 - /prompt returns 200 even with node_errors; check them or outputs silently skip.
 - Trellis dino model is dino_v3_L_naf_fp32 from Comfy-Org/Pixal3D.
+- Pinokio git: use `git -c credential.helper=` + GIT_TERMINAL_PROMPT=0 or login popups appear.

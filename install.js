@@ -5,6 +5,11 @@ const ULTRATEX_MAD = "8d434a2104be520ea699a9baac2327d124387111"
 
 // CLAUDE-NOTE: no fs.link to Pinokio's shared drive on purpose. On this machine the shared drive lives on C:
 // (partly inside Pinokio's program folder), and the user chose to keep the ~40 GB of models on the app's drive.
+// CLAUDE-NOTE: git must never pop up a login window (credential helper picker / GitHub sign-in). Public repos
+// need no login; an empty credential.helper + these env vars make a bad URL or private repo fail fast instead.
+// Keep the same lines in install.js, update.js and update_deps.js.
+const NO_GIT_LOGIN = { GIT_TERMINAL_PROMPT: "0", GCM_INTERACTIVE: "never" }
+
 module.exports = {
   requires: { bundle: "ai" },
   run: [
@@ -13,12 +18,12 @@ module.exports = {
       params: {
         path: "app",
         message: [
-          "git clone https://github.com/comfyanonymous/ComfyUI comfyui",
-          "git clone https://github.com/visualbruno/ComfyUI-UltraTex comfyui/custom_nodes/ComfyUI-UltraTex",
-          `git -C comfyui/custom_nodes/ComfyUI-UltraTex checkout ${ULTRATEX_VB}`,
-          "git clone https://github.com/Mstafa-awad/UltraTex-ComfyUI-nodes comfyui/custom_nodes/comfyui_ultratex_modular",
-          `git -C comfyui/custom_nodes/comfyui_ultratex_modular checkout --force ${ULTRATEX_MAD}`,
-          "git clone https://github.com/city96/ComfyUI-GGUF comfyui/custom_nodes/ComfyUI-GGUF"
+          "git -c credential.helper= clone https://github.com/comfyanonymous/ComfyUI comfyui",
+          "git -c credential.helper= clone https://github.com/visualbruno/ComfyUI-UltraTex comfyui/custom_nodes/ComfyUI-UltraTex",
+          `git -c credential.helper= -C comfyui/custom_nodes/ComfyUI-UltraTex checkout ${ULTRATEX_VB}`,
+          "git -c credential.helper= clone https://github.com/Mstafa-awad/UltraTex-ComfyUI-nodes comfyui/custom_nodes/comfyui_ultratex_modular",
+          `git -c credential.helper= -C comfyui/custom_nodes/comfyui_ultratex_modular checkout --force ${ULTRATEX_MAD}`,
+          "git -c credential.helper= clone https://github.com/city96/ComfyUI-GGUF comfyui/custom_nodes/ComfyUI-GGUF"
         ]
       }
     },
