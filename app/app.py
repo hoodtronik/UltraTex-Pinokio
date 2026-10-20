@@ -83,7 +83,7 @@ def download_set(task, mode, progress=gr.Progress()):
 def build():
     prefs = settings.load()
     with gr.Blocks(title="Trellis2 + UltraTex", css=CSS, theme=gr.themes.Soft()) as demo:
-        gr.Markdown("# UltraTex\nImage → mesh with **Trellis 2**, then mesh + reference image → PBR textures with **UltraTex**.")
+        gr.Markdown("# Trellis2 + UltraTex\nImage → mesh with **Trellis 2**, then mesh + reference image → PBR textures with **UltraTex**.")
         with gr.Row():
             vram = gr.Radio(VRAM_CHOICES, value=prefs["vram_mode"], label="VRAM mode", scale=3)
             stop_btn = gr.Button("Stop", variant="stop", scale=1)
