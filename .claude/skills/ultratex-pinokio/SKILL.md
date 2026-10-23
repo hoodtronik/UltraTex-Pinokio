@@ -90,7 +90,7 @@ Add it to `MODELS` and `REQUIRED` in `models.py`. The saved filename must match 
 - Quote pip version specifiers in Pinokio `shell.run` (`"triton-windows<3.8"`). Unquoted `<` and `>` are redirects on Windows.
 - Torch is pinned to 2.13 cu130 with `triton-windows<3.8`, the newest pair in UltraTex's torch→triton table. torchaudio has no cu130 build past 2.11 and is not installed.
 - **Don't use `fs.link`.** Models stay in the app folder by design (the author's Pinokio shared drive sits on a different drive). If the links ever reappear, remove the junctions with `cmd /c rmdir`. Never use `rm -rf`, which deletes the shared models.
-- `FLUX.2-klein-base-9b-fp8` (High VRAM texture) is gated and needs an HF token (lookup order: `HF_TOKEN` env var, Models tab → `app/settings.json`, then the machine's `hf auth login`; that's why ENVIRONMENT must not set HF_HOME). Only the **base** Klein works, not the distilled one.
+- `FLUX.2-klein-base-9b-fp8` (High VRAM texture) is gated and needs an HF token (lookup order: `HF_TOKEN` env var, Models tab → `app/settings.json`, `get_token()`, then the user-home `~/.cache/huggingface/token` read directly — Pinokio's GLOBAL ENVIRONMENT sets `HF_HOME=<pinokio>/cache/HF_HOME`, which hides an `hf auth login` token from `get_token()`). Only the **base** Klein works, not the distilled one.
 - The Trellis template's CLIP vision model is `dino_v3_L_naf_fp32.safetensors` from **Comfy-Org/Pixal3D**, not `dino_v3_vit_l` from Comfy-Org/TRELLIS.2.
 - Low VRAM UltraTex has no fallback without Triton. install.js runs `tools/triton_check.py`; look for `Triton sparse attention: OK` in the install log.
 - Gradio serves files only from `allowed_paths` (ComfyUI `output/`).

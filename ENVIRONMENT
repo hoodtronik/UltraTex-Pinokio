@@ -1,5 +1,6 @@
 # Keep caches inside the app folder (on the app's drive) instead of the system temp / user profile.
-# HF_HOME is left alone on purpose: it holds the user's `hf auth login` token (models download straight to app/comfyui/models).
+# HF_HOME is left alone on purpose (models download straight to app/comfyui/models). Pinokio's global ENVIRONMENT still
+# redirects it, so settings.hf_token() also reads the user-home `hf auth login` token directly.
 GRADIO_TEMP_DIR=./cache/GRADIO_TEMP_DIR
 TORCH_HOME=./cache/TORCH_HOME
 PINOKIO_SCRIPT_DEFAULT=true
