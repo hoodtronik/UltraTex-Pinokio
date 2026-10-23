@@ -94,7 +94,7 @@ Models stay inside this app (`app/comfyui/models`), not Pinokio's shared drive.
 - **"... is gated" error in High VRAM mode:** accept the FLUX license and add a Hugging Face token (see [Models](#models)).
 - **Out of memory:** switch to Low VRAM mode, click **Free VRAM**, or close other GPU apps.
 - **Bad texture on the back or sides:** use a sharper, front-on reference image, or try **Advanced** quality.
-- **Mesh too dense or slow to texture:** lower **Target faces** in tab 1. UltraTex works best with about 0.5–1M faces.
+- **Mesh too dense or slow to texture:** lower **Target faces** in tab 1. UltraTex works best with about 0.5–1M faces. The slider goes down to 10k for web or phone AR models, but very low counts may texture less well; you can also generate at 700k and reduce the mesh afterwards in Blender.
 - **Keep my UVs fails or looks wrong:** it needs one material, UVs inside 0–1, and no overlapping or mirrored islands.
 - **Something else:** check the logs in the app folder under `logs/api/`. Click **Stop**, then **Start** again; if it still fails, run **Update**.
 
