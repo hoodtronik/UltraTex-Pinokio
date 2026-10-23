@@ -101,7 +101,10 @@ def build():
                         m_image = gr.Image(type="filepath", label="Image (object on any background)", height=360)
                         m_preview = gr.Checkbox(value=False, label="Quick Trellis texture preview (UltraTex will replace it)")
                         with gr.Accordion("Settings", open=False):
-                            m_faces = gr.Slider(100_000, 2_000_000, value=700_000, step=50_000, label="Target faces (UltraTex likes 0.5–1M)")
+                            # CLAUDE-NOTE: min lowered 100k -> 10k (2026-10-23, Ilyas: "you can change the code in the app
+                            # to go lower if you need to") so a mesh can come out near a phone/WebAR budget (~30k). The
+                            # DecimateMesh node accepts any count >= 0; the slider was the only limit. Default unchanged.
+                            m_faces = gr.Slider(10_000, 2_000_000, value=700_000, step=10_000, label="Target faces (UltraTex likes 0.5–1M; lower = phone/WebAR)")
                             m_seed = gr.Number(value=-1, precision=0, label="Seed (-1 = random)")
                         m_btn = gr.Button("Generate mesh", variant="primary")
                     with gr.Column():
